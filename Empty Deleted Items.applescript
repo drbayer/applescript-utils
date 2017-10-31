@@ -1,5 +1,6 @@
 set trashName to "Deleted Items"
 set myName to "Empty Deleted Items"
+set messageAge to ((current date) - 7 * days)
 
 tell application "Microsoft Outlook"
 	
@@ -19,9 +20,11 @@ tell application "Microsoft Outlook"
 	set deletedMessages to (messages of trashFolder)
 	set messageCount to 0
 	repeat with theMessage in deletedMessages
-		permanently delete theMessage
-		set messageCount to (messageCount + 1)
+		if time received of theMessage is less than messageAge then
+			permanently delete theMessage
+			set messageCount to (messageCount + 1)
+		end if
 	end repeat
 	display notification "Permanently deleted " & messageCount & " messages from folder " & trashName with title myName
-
+	
 end tell
